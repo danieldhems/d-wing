@@ -4,10 +4,15 @@ const webpack = require("webpack-stream");
 const webpackConfig = require("./webpack.config.js");
 
 // The development server (the recommended option for development)
-gulp.task("default", ["copy-html", "webpack", "watch"]);
+gulp.task("default", ["copy-html", "copy-image", "webpack", "watch"]);
 
 gulp.task("copy-html", [], function() {
 	gulp.src('src/index.html')
+	.pipe(gulp.dest('dist/'));
+});
+
+gulp.task("copy-image", [], function() {
+	gulp.src('src/**/*.gif')
 	.pipe(gulp.dest('dist/'));
 });
 

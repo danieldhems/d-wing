@@ -18,9 +18,7 @@ export default class PlayerShip extends Ship {
 		this.width = CharacterDefaults.PlayerShip.width;
 		this.height = CharacterDefaults.PlayerShip.height;
 
-		this.element.style.backgroundColor = '#000';
-
-		this.velocity = 2.5;
+		this.velocity = 2;
 
 		this.coords = {
 			x:0,
@@ -28,6 +26,17 @@ export default class PlayerShip extends Ship {
 		};
 
 		this.setDimensions();
+		this.setStyles();
+	}
+
+	setStyles(){
+		this._setStyle('backgroundImage', 'url(./sprite-clear.gif)');
+		this._setStyle('backgroundPosition', CharacterDefaults.PlayerShip.styleRules.backgroundImagePosition);
+	}
+
+	_setStyle(selector, style){
+		console.log(selector, style)
+		this.element.style[selector] = style;
 	}
 
 	setDimensions(){
@@ -39,6 +48,10 @@ export default class PlayerShip extends Ship {
 		this.element.style.position = 'absolute';
 		this.element.style.top = window.innerHeight / 2 - this.height/2 + 'px'
 		this.element.style.left = '20px';
+		this.coords = {
+			x: 20,
+			y: window.innerHeight / 2 - this.height/2
+		}
 	}
 
 	setPosition(axis, position){

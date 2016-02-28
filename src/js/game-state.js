@@ -10,7 +10,7 @@ class GameState {
 		this._interval = null;
 		this._initialTime = null;
 		this._elapsedTime = 0;
-		this._safeTimeout = 3000;
+		this._safeTimeout = 20000;
 	}
 
 	initialize(){
@@ -34,25 +34,20 @@ class GameState {
 
 	tick(){
 		let keysDown = UserInput.getKeysDown();
-				console.log(keysDown)
 		Stage.charactersOnStage.map( character => {
-			if(UserInput.keysDown.length>0){
-				UserInput.keysDown.map(key=>{
-					switch(key){
-						case UserInputConfig.left:
-							Move(character).left();
-							break;
-						case UserInputConfig.right:
-							Move(character).right();
-							break;
-						case UserInputConfig.up:
-							Move(character).up();
-							break;
-						case UserInputConfig.down:
-							Move(character).down();
-							break;
-					}
-				})
+			if(keysDown.length>0){
+				if(keysDown.find(x=>x===UserInputConfig.left)){
+					Move(character).left();
+				}
+				if(keysDown.find(x=>x===UserInputConfig.right)){
+					Move(character).right();
+				}
+				if(keysDown.find(x=>x===UserInputConfig.up)){
+					Move(character).up();
+				}
+				if(keysDown.find(x=>x===UserInputConfig.down)){
+					Move(character).down();
+				}
 			}
 		})
 		if(this._elapsedTime>this._safeTimeout) this.stopTime();

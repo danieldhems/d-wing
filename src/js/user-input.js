@@ -3,14 +3,21 @@ import UserInputConfig from './user-input-config';
 class UserInput {
 	constructor(options){
 		this.keysDown = [];
-		this.bindKeys()
+		this.bindKeyDown();
+		this.bindKeyUp();
 	}
 
-	bindKeys(){
+	bindKeyDown(){
 		window.addEventListener('keydown', e =>{
 			for(let key in UserInputConfig){
 				if(e.keyCode===UserInputConfig[key]) this.keysDown.push(e.keyCode);
 			}
+		})
+	}
+
+	bindKeyUp(){
+		window.addEventListener('keyup', e => {
+			this.keysDown = [];
 		})
 	}
 

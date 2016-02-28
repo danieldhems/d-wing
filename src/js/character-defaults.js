@@ -5,8 +5,11 @@ export default {
 		hasShield: false
 	},
 	PlayerShip: {
-		width:50,
-		height:30
+		width:24,
+		height:21,
+		styleRules: {
+			backgroundImagePosition: '0 -280px'
+		}
 	},
 	Bullet: {
 		HTMLElement: 'i',
