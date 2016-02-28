@@ -1,30 +1,10 @@
-import Move from './move';
-import Character from './character';
-import Bullet from './bullet';
-import Shield from './shield';
-import Collision from './collision';
-import Stage from './stage';
-import GameState from './game-state';
-
-export default class Ship extends Character {
+export default class Ship {
 	constructor(options){
-		super(options);
-
-		this.config = {
-			isSpawned: true,
-			weapon: {},
-			shield: {},
-			position: {},
-			health: 1
-		}
-	}
-
-	spawn(){
-		super();
-	}
-
-	move(){
-
+		this.isSpawned=  true;
+		this.weapon=  {};
+		this.shield=  {};
+		this.position=  {};
+		this.health=  1;
 	}
 
 	shoot(){
@@ -35,7 +15,4 @@ export default class Ship extends Character {
 
 	}
 
-	pickUp(item){
-
-	}
 }

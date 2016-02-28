@@ -1,9 +1,9 @@
 import Move from './move';
 
-export default class Stage {
+class Stage {
 	constructor(options){
-		super(options);
 
+		this.HTMLElement = 'div';
 		this.stage = null;
 
 		this.config = {
@@ -17,6 +17,8 @@ export default class Stage {
 			scrollProgress: 0,
 			isScrolling: false
 		}
+
+		this.charactersOnStage = [];
 	}
 
 	_setConfig(options){
@@ -29,16 +31,26 @@ export default class Stage {
 			isScrolling: true
 		});
 
-		this.stage = Character.create('stage');
-		document.body.appendChild(this.stage.element);
+		let stageElement = document.createElement(this.HTMLElement);
+		this.stage = document.body.appendChild(stageElement);
+
 	}
 
 	// Add a new instance of a character to the stage 
-	spawn(character){
-		this.stage.element.appendChild(character.element);
+	add(character){
+		this.stage.appendChild(character.element);
+		character.setInitialPosition();
+		this.charactersOnStage.push(character);
 	}
 
 	remove(character){
 		this.stage.element.removeChild('#'+character.elementID);
+		this.charactersOnStage.splice(this.charactersOnStage.findIndex(x=>x['id']===character['id']),1);
+	}
+
+	getCharactersOnStage(){
+		return this.charactersOnStage;
 	}
 }
+
+export default new Stage();

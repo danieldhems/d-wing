@@ -1,11 +1,15 @@
 export default {
-	Stage: {
-		HTMLElement: 'div'
-	},
 	Ship: {
-		HTMLElement: 'i'
+		HTMLElement: 'i',
+		health: 1,
+		hasShield: false
+	},
+	PlayerShip: {
+		width:50,
+		height:30
 	},
 	Bullet: {
-		HTMLElement: 'i'
+		HTMLElement: 'i',
+		damage: 1
 	}
 }
