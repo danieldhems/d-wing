@@ -3,8 +3,10 @@ import UserInputConfig from './user-input-config';
 class UserInput {
 	constructor(options){
 		this.keysDown = [];
+		this.keyPressed = null;
 		this.bindKeyDown();
 		this.bindKeyUp();
+		this.bindKeyPress();
 	}
 
 	bindKeyDown(){
@@ -21,8 +23,20 @@ class UserInput {
 		})
 	}
 
+	bindKeyPress(){
+		window.addEventListener('keypress', e => {
+			this.keyPressed = e.keyCode;
+		})
+	}
+
 	getKeysDown(){
 		return this.keysDown;
+	}
+
+	getKeyPressed(){
+		let keyPressed = this.keyPressed;
+		this.keyPressed = null;
+		return keyPressed;
 	}
 }
 

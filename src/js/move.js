@@ -1,20 +1,19 @@
 function Move(character){
 	return {
 		left(){
-			character.setPosition('x', character.coords.x - character.velocity);
+			character.element.style.left = parseInt(character.element.style.left) - character.velocity + 'px';
 		},
 
 		right(){
-			let newPosition = character.coords.x + character.velocity
-			character.setPosition('x', newPosition);
+			character.element.style.left = parseInt(character.element.style.left) + character.velocity + 'px';
 		},
 
 		up(){
-			character.setPosition('y', character.coords.y - character.velocity);
+			character.element.style.top = parseInt(character.element.style.top) - character.velocity + 'px';
 		},
 
 		down(){
-			character.setPosition('y', character.coords.y + character.velocity);
+			character.element.style.top = parseInt(character.element.style.top) + character.velocity + 'px';
 		}
 	}
 }

@@ -2,8 +2,9 @@ import GameStateDefaults from './game-state-defaults';
 import Move from './move';
 import UserInputConfig from './user-input-config';
 import PlayerShip from './player-ship';
+import EnemyShip from './enemy-ship';
 import UserInput from './user-input';
-import Stage from './stage';
+import Scene from './scene';
 
 class GameState {
 	constructor(){
@@ -14,9 +15,7 @@ class GameState {
 	}
 
 	initialize(){
-		Stage.initialize();
-		Stage.add(new PlayerShip());
-		this.startTime();
+		Scene.initialize();
 	}
 
 	startTime(){
@@ -34,7 +33,8 @@ class GameState {
 
 	tick(){
 		let keysDown = UserInput.getKeysDown();
-		Stage.charactersOnStage.map( character => {
+		let keyPressed = keyPressed || UserInput.getKeyPressed();
+		Scene.getCharactersOnScene().ships.map( character => {
 			if(keysDown.length>0){
 				if(keysDown.find(x=>x===UserInputConfig.left)){
 					Move(character).left();
@@ -48,6 +48,10 @@ class GameState {
 				if(keysDown.find(x=>x===UserInputConfig.down)){
 					Move(character).down();
 				}
+			}
+
+			if(keyPressed !== null && keyPressed===UserInputConfig.shoot){
+				character.shoot();
 			}
 		})
 		if(this._elapsedTime>this._safeTimeout) this.stopTime();
