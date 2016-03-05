@@ -4,7 +4,6 @@ import UserInputConfig from './user-input-config';
 import UserInput from './user-input';
 import Weapon from './weapon';
 import Move from './move';
-// import Shield from './shield';
 
 window.DWing = window.DWing || {};
 window.DWing.ships = window.DWing.ships || [];
@@ -15,7 +14,7 @@ class PlayerShip extends Ship {
 
 		this.move = new Move(this);
 
-		this.characterType = 'friendly';
+		this.characterType = 'player';
 		this.isSpawned = true;
 		this.shield = {};
 		this.health = 1;
@@ -27,7 +26,7 @@ class PlayerShip extends Ship {
 		this.height = CharacterDefaults.PlayerShip.height;
 
 		this.coords = {
-			x:0,
+			x:0, 
 			y:0
 		};
 
@@ -59,16 +58,16 @@ class PlayerShip extends Ship {
 		let keysDown = UserInput.getKeysDown();
 		let keyPressed = keyPressed || UserInput.getKeyPressed();
 		if(keysDown.length>0){
-			if(keysDown.find(x=>x===UserInputConfig.left)){
+			if(keysDown.find(x=>x===UserInputConfig.left && this.boundingBox().left > 0)){
 				this.move.left();
 			}
-			if(keysDown.find(x=>x===UserInputConfig.right)){
+			if(keysDown.find(x=>x===UserInputConfig.right && this.boundingBox().right < window.innerWidth)){
 				this.move.right();
 			}
-			if(keysDown.find(x=>x===UserInputConfig.up)){
+			if(keysDown.find(x=>x===UserInputConfig.up && this.boundingBox().top > 0)){
 				this.move.up();
 			}
-			if(keysDown.find(x=>x===UserInputConfig.down)){
+			if(keysDown.find(x=>x===UserInputConfig.down && this.boundingBox().bottom < window.innerHeight)){
 				this.move.down();
 			}
 		}
@@ -78,8 +77,7 @@ class PlayerShip extends Ship {
 	}
 
 	shoot(){
-
-		this.weapon = new Weapon({coords:{x:parseInt(this.element.style.left)+parseInt(this.element.style.width),y:parseInt(this.element.style.top)+parseInt(this.element.style.height)/2}, spawnTarget:this.element});
+		this.weapon = new Weapon({ship:this,coords:{x:parseInt(this.element.style.left)+parseInt(this.element.style.width),y:parseInt(this.element.style.top)+parseInt(this.element.style.height)/2}, spawnTarget:this.element});
 	}
 
 	pickUp(item){
