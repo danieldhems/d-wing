@@ -8,6 +8,8 @@ export default {
 	PlayerShip: {
 		width:24,
 		height:21,
+		fireRate: 200,
+		shipType: 'player',
 		weaponPosition: {
 			x: 25,
 			y: 8
@@ -16,20 +18,55 @@ export default {
 			backgroundPosition: '0 -280px'
 		}
 	},
-	Weapons: [
+	EnemyShips: [
 		{
-			hitPoints: 1,
-			HTMLElement: 'i',
-			damage: 1,
-			width: 9,
-			height: 7,
+			width:24,
+			height:21,
+			fireRate: 300,
+			shipType: 'enemy',
+			weaponPosition: {
+				x: 25,
+				y: 8
+			},
 			styleRules: {
-				backgroundPosition: '-147px -325px',
-				backgroundImage: 'url(./sprite-clear.gif)',
-				display: 'block',
-				width: '9px',
-				height: '7px'
-			}			
-		}
-	]
+				backgroundPosition: '0 -280px'
+			}
+		},
+	],
+	Weapons: {
+		Player: [
+			{
+				hitPoints: 1,
+				HTMLElement: 'i',
+				damage: 1,
+				width: 9,
+				height: 7,
+				velocity: 64,
+				styleRules: {
+					backgroundPosition: '-147px -325px',
+					backgroundImage: 'url(./sprite-clear.gif)',
+					display: 'block',
+					width: '9px',
+					height: '7px'
+				}			
+			}
+		],
+		Enemy: [
+			{
+				hitPoints: 1,
+				HTMLElement: 'i',
+				damage: 1,
+				width: 9,
+				height: 7,
+				velocity: 16,
+				styleRules: {
+					backgroundPosition: '-147px -325px',
+					backgroundImage: 'url(./sprite-clear.gif)',
+					display: 'block',
+					width: '9px',
+					height: '7px'
+				}
+			}
+		]
+	}	
 }

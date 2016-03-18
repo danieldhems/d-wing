@@ -54,6 +54,13 @@ class PlayerShip extends Ship {
 		}
 	}
 
+	getCoords(){
+		return {
+			x: this.boundingBox().left,
+			y: this.boundingBox().top,
+		}
+	}
+
 	tick(){
 		let keysDown = UserInput.getKeysDown();
 		let keyPressed = keyPressed || UserInput.getKeyPressed();
@@ -77,7 +84,14 @@ class PlayerShip extends Ship {
 	}
 
 	shoot(){
-		this.weapon = new Weapon({ship:this,coords:{x:parseInt(this.element.style.left)+parseInt(this.element.style.width),y:parseInt(this.element.style.top)+parseInt(this.element.style.height)/2}, spawnTarget:this.element});
+		this.weapon = new Weapon({
+			ship:this,
+			coords:{
+				x:parseInt(this.element.style.left)+parseInt(this.element.style.width),
+				y:parseInt(this.element.style.top)+parseInt(this.element.style.height)/2
+			},
+			spawnTarget:this.element
+		});
 	}
 
 	pickUp(item){

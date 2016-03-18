@@ -44,15 +44,9 @@ export default class Character {
 
 	setInitialPosition(options){}
 
-	setPosition(axis, position){
-		switch(axis){
-			case 'x':
-				this.element.style.left = position + 'px';
-				break;
-			case 'y':
-				this.element.style.top = position + 'px';
-				break;
-		}
+	setPosition(x, y){
+		this.element.style.left = x + 'px';
+		this.element.style.top = y + 'px';
 	}
 
 	setVelocity(velocity){
@@ -74,6 +68,10 @@ export default class Character {
 			bottom: this.element.offsetTop + this.element.offsetHeight,
 			left: this.element.offsetLeft
 		}
+	}
+
+	isOffScreen(){
+		return this.boundingBox().top < 0 || this.boundingBox().right > window.innerWidth || this.boundingBox().bottom > window.innerHeight || this.boundingBox().left < 0;
 	}
 
 	hasCollision(target){

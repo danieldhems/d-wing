@@ -32,13 +32,4 @@ export default class Ship extends Character {
 		if(this.health < 1) this.destroy();
 	}
 
-	shoot(){
-		let elStyles = this.element.styles;
-		let coords = {
-			x: parseInt(elStyles.left)+this.width,
-			y: parseInt(elStyles.type)+this.height/2
-		}
-		this.weapon = new Weapon({coords, spawnTarget:this.element});
-	}
-
 }
