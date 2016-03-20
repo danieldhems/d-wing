@@ -61,6 +61,13 @@ export default class Character {
 		}
 	}
 
+	clone(){
+		let clone = document.createElement(this.HTMLElement);
+		this.element.parentNode.appendChild(clone);
+		clone.id = "w"+Date.now();
+		return clone
+	}
+
 	boundingBox(){
 		return {
 			top: this.element.offsetTop,

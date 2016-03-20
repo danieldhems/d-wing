@@ -30,13 +30,25 @@ class PlayerShip extends Ship {
 			y:0
 		};
 
+		this.element.id = 'player';
+
 		this.setDimensions();
 		this.setStyles(CharacterDefaults.PlayerShip.styleRules);
 		this.spawn(this.element, '#main');
 		this.setInitialPosition();
+
+		this.setWeapon(CharacterDefaults.Weapons.Player[0]);
 		this.startInterval(this.intervalID, this.tick.bind(this));
 
 		window.DWing.ships.push(this);
+	}
+
+	setWeapon(options){
+		Object.assign(options,{
+			ship:this,
+			spawnTarget:this.element
+		})
+		this.weapon = new Weapon(options);
 	}
 
 	setDimensions(){
@@ -61,21 +73,32 @@ class PlayerShip extends Ship {
 		}
 	}
 
+	shoot(){
+		this.weapon.fire();
+	}
+
+	pickUp(item){
+
+	}
+
 	tick(){
 		let keysDown = UserInput.getKeysDown();
 		let keyPressed = keyPressed || UserInput.getKeyPressed();
 		if(keysDown.length>0){
-			if(keysDown.find(x=>x===UserInputConfig.left && this.boundingBox().left > 0)){
+			if(keysDown.find(x=>x===UserInputConfig.left) && this.boundingBox().left > 0){
 				this.move.left();
 			}
-			if(keysDown.find(x=>x===UserInputConfig.right && this.boundingBox().right < window.innerWidth)){
+			if(keysDown.find(x=>x===UserInputConfig.right) && this.boundingBox().right < window.innerWidth){
 				this.move.right();
 			}
-			if(keysDown.find(x=>x===UserInputConfig.up && this.boundingBox().top > 0)){
+			if(keysDown.find(x=>x===UserInputConfig.up) && this.boundingBox().top > 0){
 				this.move.up();
 			}
-			if(keysDown.find(x=>x===UserInputConfig.down && this.boundingBox().bottom < window.innerHeight)){
+			if(keysDown.find(x=>x===UserInputConfig.down) && this.boundingBox().bottom < window.innerHeight){
 				this.move.down();
+			}
+			if(keysDown.find(x=>x===UserInputConfig.shoot) && this.weapon.hasRapidFire){
+				this.shoot();
 			}
 		}
 		if(keyPressed !== null && keyPressed===UserInputConfig.shoot){
@@ -83,20 +106,6 @@ class PlayerShip extends Ship {
 		}
 	}
 
-	shoot(){
-		this.weapon = new Weapon({
-			ship:this,
-			coords:{
-				x:parseInt(this.element.style.left)+parseInt(this.element.style.width),
-				y:parseInt(this.element.style.top)+parseInt(this.element.style.height)/2
-			},
-			spawnTarget:this.element
-		});
-	}
-
-	pickUp(item){
-
-	}
 }
 
 export default new PlayerShip();

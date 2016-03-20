@@ -7,34 +7,39 @@ export default class Weapon extends Character {
 	constructor(options){
 		super(options);
 
-		Object.assign(this, CharacterDefaults.Weapons.Enemy[0]);
 		Object.assign(this, options);
-		this.element = document.createElement(this.HTMLElement);
 		this.timeSignature = new Date().getTime();
+		this.element = document.createElement('i');
 		this.element.id = 'w'+this.timeSignature;
 
-		this.target = options.target;
-
-		this.velocity = 16;
-		this.move = new Move(this);
-
-		this.setInitialPosition(this.coords);
-		this.setStyles(this.styleRules);
-		this.spawn(this.element, this.spawnTarget);
-		this.startInterval();
+		this.target = document.querySelector('#player');
 
 		this.hasCollision = this.hasCollision.bind(this);
+		this.move = new Move(this);
 
-		this.targetCoords = {
-			x: this.target.element.offsetLeft,
-			y: this.target.element.offsetTop,
-		};
-		
+		if(this.target){
+			this.targetCoords = {
+				x: parseInt(this.target.style.left),
+				y: parseInt(this.target.style.top),
+			};
+
+			this.vector = this.getVector(this.targetCoords);
+			this.magnitude = Math.sqrt((this.deltaX*this.deltaX)+(this.deltaY*this.deltaY));
+		}
+	}
+
+	fire(){
+		this.spawn(this.element, this.ship.element);
+		this.setInitialPosition(this.ship.element.offsetLeft, this.ship.element.offsetTop);
+		this.setStyles(this.styleRules);
+		this.startInterval();
+	}
+
+	// Calculate vector to target
+	getVector(target){
 		this.startVector = new Vector2(this.coords.x, this.coords.y);
-		this.targetVector = new Vector2(this.targetCoords.x, this.targetCoords.y);
-		this.direction = this.targetVector.subtract(this.startVector).getNormalized();
-
-		this.magnitude = Math.sqrt((this.deltaX*this.deltaX)+(this.deltaY*this.deltaY));
+		this.targetVector = new Vector2(target.x, target.y);
+		return this.targetVector.subtract(this.startVector).getNormalized();
 	}
 
 	_getDistanceToTarget(target){
@@ -49,9 +54,9 @@ export default class Weapon extends Character {
 		return Math.atan2(y,x);
 	}
 
-	setInitialPosition(coords=null){
-		if(coords!==null){
-			this.setStyles({'left':coords.x+'px','top':coords.y+'px'})
+	setInitialPosition(x,y){
+		if(x&&y){
+			this.setStyles({'left':x+'px','top':y+'px'})
 		} else {
 			this.element.style.position = 'absolute';
 			this.element.style.top = window.innerHeight / 2 - this.height/2 + 'px'
@@ -74,35 +79,42 @@ export default class Weapon extends Character {
 		return this.damage;
 	}
 
+	destroy(){
+		this.element.parentNode.removeChild(document.querySelector('#'+this.element.id));
+		clearInterval(this.intervalID);
+	}
+
 	tick(){
 
 		// Who fired this weapon?
 		switch(this.ship.characterType){
 			case 'player':
-				this.move.right();
+				let direction;
+				if(this.isHoming){
+					direction = this.getVector()
+				} else {
+					console.log(this.element.offsetLeft)
+					this.move.right();
+				}
+
 				if(window.DWing && window.DWing.hasOwnProperty('ships') && window.DWing.ships.length>0){
 					window.DWing.ships.forEach( ship => {
 						if(ship.characterType==='enemy' && this.hasCollision(ship)){
 							ship.takeDamage(this.hitPoints);
 							this.destroy();
-							clearInterval(this.intervalID);
 						}
 					})
 				}
 				break;
 			case 'enemy':
-				this.element.style.top = parseInt(this.element.style.top) + (this.direction.y * 4) + 'px';
-				this.element.style.left = parseInt(this.element.style.left) + (this.direction.x * 4) + 'px';
+				this.element.style.top = parseInt(this.element.style.top) + (this.vector.y * 4) + 'px';
+				this.element.style.left = parseInt(this.element.style.left) + (this.vector.x * 4) + 'px';
 				break;
 		}
 		
 		if(this.isOffScreen()){
-			clearInterval(this.intervalID);
 			this.destroy();
 		}
 	}
 
-	destroy(){
-		this.element.parentNode.removeChild(document.querySelector('#'+this.element.id));
-	}
 }

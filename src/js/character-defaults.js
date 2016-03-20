@@ -31,7 +31,7 @@ export default {
 			styleRules: {
 				backgroundPosition: '0 -280px'
 			}
-		},
+		}
 	],
 	Weapons: {
 		Player: [
@@ -41,7 +41,41 @@ export default {
 				damage: 1,
 				width: 9,
 				height: 7,
-				velocity: 64,
+				velocity: 16,
+				isProjectile: true,
+				styleRules: {
+					backgroundPosition: '-147px -325px',
+					backgroundImage: 'url(./sprite-clear.gif)',
+					display: 'block',
+					width: '9px',
+					height: '7px'
+				}
+			},
+			{
+				hitPoints: 1,
+				HTMLElement: 'i',
+				damage: 1,
+				width: 9,
+				height: 7,
+				velocity: 16,
+				isProjectile: true,
+				hasSatelites: true,
+				hasRapidFire: true,
+				fireSprite: {
+
+				},
+				sateliteSprite: {
+					x: 0,
+					y: 0
+				},
+				upperSatelitePosition: {
+					x: 0,
+					y: 0
+				},
+				lowerSatelitePosition: {
+					x: 0,
+					y: 0
+				},
 				styleRules: {
 					backgroundPosition: '-147px -325px',
 					backgroundImage: 'url(./sprite-clear.gif)',

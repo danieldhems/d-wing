@@ -32,6 +32,16 @@ class EnemyShip extends Ship {
 			y:0
 		};
 
+		this.weapon = new Weapon({
+			ship:this,
+			coords:{
+				x:parseInt(this.element.style.left)+parseInt(this.element.style.width)/2,
+				y:parseInt(this.element.style.top)+parseInt(this.element.style.height)/2
+			},
+			target: window.DWing.ships[0],
+			spawnTarget:this.element
+		});
+
 		this.setDimensions();
 		this.setStyles(CharacterDefaults.PlayerShip.styleRules);
 		this.spawn(this.element, '#main');
@@ -57,15 +67,7 @@ class EnemyShip extends Ship {
 	}
 
 	shoot(){
-		this.weapon = new Weapon({
-			ship:this,
-			coords:{
-				x:parseInt(this.element.style.left)+parseInt(this.element.style.width)/2,
-				y:parseInt(this.element.style.top)+parseInt(this.element.style.height)/2
-			},
-			target: window.DWing.ships[0],
-			spawnTarget:this.element
-		});
+		this.weapon.fire();
 	}
 
 	tick(){
