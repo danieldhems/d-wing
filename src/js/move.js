@@ -1,19 +1,19 @@
 function Move(character){
 	return {
 		left(){
-			character.element.style.left = parseInt(character.element.style.left) - character.velocity + 'px';
+			character.position.x = character.position.x - character.velocity;
 		},
 
 		right(){
-			character.element.style.left = parseInt(character.element.style.left) + character.velocity + 'px';
+			character.position.x = character.position.x + character.velocity;
 		},
 
 		up(){
-			character.element.style.top = parseInt(character.element.style.top) - character.velocity + 'px';
+			character.position.y = character.position.y - character.velocity;
 		},
 
 		down(){
-			character.element.style.top = parseInt(character.element.style.top) + character.velocity + 'px';
+			character.position.y = character.position.y + character.velocity;
 		}
 	}
 }

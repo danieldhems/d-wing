@@ -1,88 +1,47 @@
 import CharacterDefaults from './character-defaults';
 import Ship from './ship';
 import Weapon from './weapon';
-import Move from './move';
-import Utils from './utils'
-;
-window.DWing = window.DWing || {};
-window.DWing.ships = window.DWing.ships || [];
+import Utils from './utils';
+import Scene from './scene';
 
-class EnemyShip extends Ship {
+export default class EnemyShip extends Ship {
 	constructor(options){
 		super(options);
 
 		Object.assign(this, CharacterDefaults.EnemyShips[0]);
 		Object.assign(this, options);
 
-		this.move = new Move(this);
+		this.sprite = new Image();
+		this.sprite.src = './sprite-clear.gif';
 
-		this.characterType = 'enemy';
+		this.type = 'enemy';
 		this.health = 3;
-		this.element = document.createElement(CharacterDefaults.Ship.HTMLElement);
-		this.element.id = 's'+ new Date().getTime();
-
-		this.intervalID = new Date().getTime();
-		this.elapsed = 0;
 
 		this.width = CharacterDefaults.PlayerShip.width;
 		this.height = CharacterDefaults.PlayerShip.height;
 
-		this.coords = {
-			x:0,
-			y:0
+		this.position = {
+			x: 300,
+			y: this.canvas.height/2-this.height/2
 		};
 
 		this.weapon = new Weapon({
-			ship:this,
-			coords:{
-				x:parseInt(this.element.style.left)+parseInt(this.element.style.width)/2,
-				y:parseInt(this.element.style.top)+parseInt(this.element.style.height)/2
-			},
-			target: window.DWing.ships[0],
-			spawnTarget:this.element
+			ship: this,
+			target: Scene.getCharactersInScene()[0]
 		});
 
-		this.setDimensions();
-		this.setStyles(CharacterDefaults.PlayerShip.styleRules);
-		this.spawn(this.element, '#main');
-		this.setInitialPosition({x: window.innerWidth / 2,y:window.innerHeight/2});
-		this.startInterval(this.intervalID, this.tick.bind(this));
-	
-		window.DWing.ships.push(this);
+		this.update = this.update.bind(this);
 	}
 
-	setDimensions(){
-		this.element.style.width = CharacterDefaults.PlayerShip.width + 'px';
-		this.element.style.height = CharacterDefaults.PlayerShip.height + 'px';
-	}
-
-	setInitialPosition(){
-		this.element.style.position = 'fixed';
-		this.element.style.top = window.innerHeight/2 + 'px';
-		this.element.style.left = window.innerWidth/2 + 'px';
-		this.coords = {
-			x: window.innerWidth/2,
-			y: window.innerHeight/2
-		}
+	update(delta){
+		this.draw();
 	}
 
 	shoot(){
 		this.weapon.fire();
 	}
 
-	tick(){
-		if(this.elapsed >= this.fireRate){
-			this.shoot();
-			this.elapsed = 0;
-		} else {
-			this.elapsed++;
-		}
-	}
-
-	destroy(){
-		this.element.parentNode.removeChild(document.querySelector('#'+this.element.id));
-		clearInterval(this.intervalID);
+	draw(){
+		this.ctx.drawImage(this.sprite, 10, 10, this.width, this.height, this.position.x, this.position.y, this.width, this.height);
 	}
 }
-
-export default new EnemyShip();

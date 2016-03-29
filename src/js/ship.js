@@ -8,15 +8,10 @@ import Move from './move';
 
 export default class Ship extends Character {
 	constructor(options){
-
 		super(options);
-
-		this.isSpawned = true;
-		this.shield = {};
 		this.position = {};
 		this.health = 1;
 		this.velocity = 1.8;
-		this.element = document.createElement(CharacterDefaults.Ship.HTMLElement);
 	}
 
 	setVelocity(velocity=CharacterDefaults.Ship.velocity){
@@ -31,5 +26,4 @@ export default class Ship extends Character {
 		if(typeof points === "number") this.health = this.health - points;
 		if(this.health < 1) this.destroy();
 	}
-
 }

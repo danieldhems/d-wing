@@ -1,84 +1,50 @@
 import CharacterDefaults from './character-defaults';
 import Scene from './scene';
 import UserInputConfig from './user-input-config';
-import UserInput from './user-input';
 
 export default class Character {
-	constructor(options){
-		this.element = document.createElement('i');
+	constructor(){
 		this.intervalID = null;
-		this.defaultStyles = {
-			backgroundImage: 'url(./sprite-clear.gif)',
-			position: 'fixed',
-			display: 'block'
-		}
-		this.coords = {};
-	}
+		this.canvas = document.querySelector('#scene');
+		this.ctx = this.canvas.getContext('2d');
+		this.id = Date.now();
 
-	set(obj){
-		Object.assign(this, obj);
-	}
-
-	startInterval(intervalID, fn){
-		intervalID = setInterval( () => {
-			fn();
-		},1);
-		console.log('interval started', intervalID)
-		this.addToIntervals(intervalID)
-	}
-
-	_setStyle(selector, style){
-		this.element.style[selector] = style;
-	}
-
-	setStyles(styleMap){
-		let styles = Object.assign(this.defaultStyles, styleMap);
-		for(let style in styles){
-			this._setStyle(style, styles[style]);
-		};
-	}
-
-	addToIntervals(intervalID){
-		window.DWingIntervals.push(intervalID)
-	}
-
-	setInitialPosition(options){}
-
-	setPosition(x, y){
-		this.element.style.left = x + 'px';
-		this.element.style.top = y + 'px';
+		this.sprite = new Image();
+		this.sprite.src = './sprite-clear.gif';
 	}
 
 	setVelocity(velocity){
 		this.velocity = velocity;
 	}
 
-	spawn(element, target){
-		if(target instanceof HTMLElement){
-			target.appendChild(element);
-		} else {
-			document.querySelector(target).appendChild(element);
-		}
+	setPosition(position){
+		this.position = {x:position.x,y:position.y};
 	}
 
-	clone(){
-		let clone = document.createElement(this.HTMLElement);
-		this.element.parentNode.appendChild(clone);
-		clone.id = "w"+Date.now();
-		return clone
-	}
-
-	boundingBox(){
+	getBoundingBox(){
 		return {
-			top: this.element.offsetTop,
-			right: this.element.offsetLeft + this.element.offsetWidth,
-			bottom: this.element.offsetTop + this.element.offsetHeight,
-			left: this.element.offsetLeft
+			top: this.position.y,
+			right: this.position.x + this.width,
+			bottom: this.position.y + this.height,
+			left: this.position.x,
 		}
 	}
 
-	isOffScreen(){
-		return this.boundingBox().top < 0 || this.boundingBox().right > window.innerWidth || this.boundingBox().bottom > window.innerHeight || this.boundingBox().left < 0;
+	getCenter(){
+		let boundingBox = this.getBoundingBox();
+		return {
+			x: boundingBox.left + this.width/2,
+			y: boundingBox.top + this.height/2
+		}
+	}
+
+	isLeavingGameArea(){
+		return {
+			top: this.getBoundingBox().top < 0,
+			right: this.getBoundingBox().right > this.canvas.width,
+			bottom: this.getBoundingBox().bottom > this.canvas.height,
+			left: this.getBoundingBox().left < 0
+		}
 	}
 
 	hasCollision(target){
@@ -88,13 +54,13 @@ export default class Character {
 		*/
 		return (
 			(
-				this.boundingBox().right > target.boundingBox().left
+				this.getBoundingBox().right > target.getBoundingBox().left
 				&&
-				this.boundingBox().left < target.boundingBox().right
+				this.getBoundingBox().left < target.getBoundingBox().right
 				&& 
-				this.boundingBox().top < target.boundingBox().bottom
+				this.getBoundingBox().top < target.getBoundingBox().bottom
 				&&
-				this.boundingBox().bottom > target.boundingBox().top
+				this.getBoundingBox().bottom > target.getBoundingBox().top
 			)
 		)
 	}
