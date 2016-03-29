@@ -42,7 +42,7 @@ class GameState {
 		let charactersInScene = Scene.getCharactersInScene();
 		// console.log(charactersInScene);
 		charactersInScene.map( character => {
-			character.update(delta);
+			character.update();
 		});
 
 		Debug.update();
