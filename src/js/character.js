@@ -38,12 +38,28 @@ export default class Character {
 		}
 	}
 
-	isLeavingGameArea(){
-		return {
+	isLeavingGameArea(direction){
+
+		let boundaryConditions = {
 			top: this.getBoundingBox().top < 0,
 			right: this.getBoundingBox().right > this.canvas.width,
 			bottom: this.getBoundingBox().bottom > this.canvas.height,
 			left: this.getBoundingBox().left < 0
+		}
+
+		if(direction){
+			switch(direction){
+				case 'top':
+					return boundaryConditions.top;
+				case 'right':
+					return boundaryConditions.right;
+				case 'bottom':
+					return boundaryConditions.bottom;
+				case 'left':
+					return boundaryConditions.left;
+			}
+		} else {
+			return boundaryConditions.top || boundaryConditions.right || boundaryConditions.bottom || boundaryConditions.left;
 		}
 	}
 
@@ -53,15 +69,42 @@ export default class Character {
 		*	http://jsfiddle.net/knam8/
 		*/
 		return (
-			(
-				this.getBoundingBox().right > target.getBoundingBox().left
-				&&
-				this.getBoundingBox().left < target.getBoundingBox().right
-				&& 
-				this.getBoundingBox().top < target.getBoundingBox().bottom
-				&&
-				this.getBoundingBox().bottom > target.getBoundingBox().top
-			)
+			this.getBoundingBox().right > target.getBoundingBox().left
+			&&
+			this.getBoundingBox().left < target.getBoundingBox().right
+			&& 
+			this.getBoundingBox().top < target.getBoundingBox().bottom
+			&&
+			this.getBoundingBox().bottom > target.getBoundingBox().top
 		)
+	}
+
+	hasCollisions(targets){
+		let collision = false;
+		targets.map( target => {
+			if(this.hasCollision(target)){
+				collision = true;
+			}
+		});
+		return collision;
+	}
+
+	debounce(func, wait, immediate) {
+		var timeout;
+		return function() {
+			var context = this, args = arguments;
+			var later = function() {
+				timeout = null;
+				if (!immediate) func.apply(context, args);
+			};
+			var callNow = immediate && !timeout;
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+			if (callNow) func.apply(context, args);
+		};
+	}
+
+	destroy(){
+		Scene.removeCharacter(this);
 	}
 }

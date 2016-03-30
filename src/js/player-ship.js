@@ -48,21 +48,21 @@ export default class PlayerShip extends Ship {
 
 		if(keysDown.length>0){
 			if(keysDown.find(x=>x===UserInputConfig.left)){
-				if(!this.isLeavingGameArea().left) Move(this).left();
+				if(!this.isLeavingGameArea('left')) Move(this).left();
 			}
 			if(keysDown.find(x=>x===UserInputConfig.right)){
-				if(!this.isLeavingGameArea().right) Move(this).right();
+				if(!this.isLeavingGameArea('right')) Move(this).right();
 			}
 			if(keysDown.find(x=>x===UserInputConfig.up)){
-				if(!this.isLeavingGameArea().top) Move(this).up();
+				if(!this.isLeavingGameArea('top')) Move(this).up();
 			}
 			if(keysDown.find(x=>x===UserInputConfig.down)){
-				if(!this.isLeavingGameArea().bottom) Move(this).down();
+				if(!this.isLeavingGameArea('bottom')) Move(this).down();
 			}
 		}
 
 		if(keyPressed !== null && keyPressed===UserInputConfig.shoot){
-			let origin = Scene.getCharactersInScene()[0].position;
+			let origin = this.position;
 			this.weapon.fire(origin);
 		}
 

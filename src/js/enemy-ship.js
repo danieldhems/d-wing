@@ -26,19 +26,26 @@ export default class EnemyShip extends Ship {
 		};
 
 		this.weapon = new Weapon({
-			ship: this,
+			source: this.type,
 			target: Scene.getCharactersInScene()[0]
 		});
 
 		this.update = this.update.bind(this);
+		this._lastShotFired = Date.now();
+		this._elapsed = 0;
 	}
 
-	update(delta){
+	update(elapsed){
 		this.draw();
+		let delta = Date.now() - this._lastShotFired;
+		if(delta > 300){
+			this.shoot();
+			this._lastShotFired = Date.now();
+		}
 	}
 
 	shoot(){
-		this.weapon.fire();
+		this.weapon.fire(this.position);
 	}
 
 	draw(){

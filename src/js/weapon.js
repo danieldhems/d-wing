@@ -1,7 +1,6 @@
 import CharacterDefaults from './character-defaults';
 import Character from './character';
 import Move from './move';
-import Vector2 from './vector2';
 import Scene from './scene';
 import Bullet from './bullet';
 
@@ -27,6 +26,7 @@ export default class Weapon extends Character {
 	fire(origin){
 		let options = {
 			source: this.source,
+			target: this.source === 'enemy' ? Scene.getCharactersInScene()[0] : null,
 			position: {
 				x: origin.x,
 				y: origin.y
@@ -39,23 +39,12 @@ export default class Weapon extends Character {
 		this.ctx.drawImage(this.sprite, 10, 10, this.width, this.height, this.position.x, this.position.y, this.width, this.height);
 	}
 
-	update(delta){
-		
-	}
-
-	// Calculate vector to target
-	getVector(target){
-		this.startVector = new Vector2(this.position.x, this.position.y);
-		this.targetVector = new Vector2(target.x, target.y);
-		return this.targetVector.subtract(this.startVector).getNormalized();
-	}
-
 	getDamage(){
 		return this.damage;
 	}
 
-	destroy(){
-		// this.element.parentNode.removeChild(document.querySelector('#'+this.element.id));
+	update(){
+
 	}
 
 	tick(){

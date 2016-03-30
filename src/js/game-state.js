@@ -34,7 +34,8 @@ class GameState {
 		Scene.clear();
 
 		let now = Date.now();
-		if(now - this._startTime > 20000) this.stop();
+		let elapsed = now - this._startTime;
+		if(elapsed > 20000) this.stop();
 
 		let delta = now - this._lastUpdate;
 		this._lastUpdate = now;
@@ -42,7 +43,7 @@ class GameState {
 		let charactersInScene = Scene.getCharactersInScene();
 		// console.log(charactersInScene);
 		charactersInScene.map( character => {
-			character.update();
+			character.update(elapsed);
 		});
 
 		Debug.update();
