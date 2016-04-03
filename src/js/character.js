@@ -1,4 +1,4 @@
-import CharacterDefaults from './character-defaults';
+import CharacterConfig from './character-config';
 import Scene from './scene';
 import UserInputConfig from './user-input-config';
 
@@ -10,7 +10,7 @@ export default class Character {
 		this.id = Date.now();
 
 		this.sprite = new Image();
-		this.sprite.src = './sprite-clear.gif';
+		this.sprite.src = './sprite.png';
 	}
 
 	setVelocity(velocity){
@@ -79,6 +79,14 @@ export default class Character {
 		)
 	}
 
+	getCollisionCandidates(keyMap){
+		return Scene.getCharactersInScene().filter(c=>{
+			for(let key in keyMap){
+				return keyMap[key] === c[key];
+			}
+		})
+	}
+
 	hasCollisions(targets){
 		let collision = false;
 		targets.map( target => {
@@ -89,22 +97,7 @@ export default class Character {
 		return collision;
 	}
 
-	debounce(func, wait, immediate) {
-		var timeout;
-		return function() {
-			var context = this, args = arguments;
-			var later = function() {
-				timeout = null;
-				if (!immediate) func.apply(context, args);
-			};
-			var callNow = immediate && !timeout;
-			clearTimeout(timeout);
-			timeout = setTimeout(later, wait);
-			if (callNow) func.apply(context, args);
-		};
-	}
-
 	destroy(){
-		Scene.removeCharacter(this);
+		Scene.removeCharacter(this.id);
 	}
 }

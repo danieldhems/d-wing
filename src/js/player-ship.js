@@ -1,45 +1,48 @@
-import CharacterDefaults from './character-defaults';
+import CharacterConfig from './character-config';
 import Ship from './ship';
 import Weapon from './weapon';
 import UserInputConfig from './user-input-config';
 import UserInput from './user-input';
 import Move from './move';
 import Scene from './scene';
+import Turrets from './turrets';
 
 export default class PlayerShip extends Ship {
 	constructor(options){
 		super(options);
 
-		this.health = 1;
+		Object.assign(this, CharacterConfig.PlayerShip)
 
-		this.width = CharacterDefaults.PlayerShip.width;
-		this.height = CharacterDefaults.PlayerShip.height;
-		this.type = 'player';
+		this.id = Date.now();
+
 		this.position = {
 			x: 50,
 			y: this.canvas.height/2-this.height/2,
 		};
 
-		this.setWeapon(CharacterDefaults.Weapons.Player[0]);
+		this.setWeaponConfig = this.setWeaponConfig.bind(this);
+		this.setWeaponConfig(this, this.currentWeaponLevel);
 		this.setVelocity(6);
-		this.update = this.update.bind(this);
-		this.draw = this.draw.bind(this);
 	}
 
-	setWeapon(options){
-		Object.assign(options,{
-			source:this.type,
-			spawnTarget:this.element
-		})
-		this.weapon = new Weapon(options);
+	upgradeWeapon(level){
+		this.setWeaponConfig(this, level);
+		if(this.weapon.turrets){
+			this.deployTurrets(this.weapon)
+		}
+	}
+
+	deployTurrets(weapon){
+		Scene.addCharacter(new Turrets({source:this,weapon}));
 	}
 
 	pickUp(item){
-
+		this.upgradeWeapon(item.level);
+		console.log(this.weapon)
 	}
 
 	draw(){
-		this.ctx.drawImage(this.sprite, 10, 10, this.width, this.height, this.position.x, this.position.y, this.width, this.height);
+		this.ctx.drawImage(this.sprite, this.spriteCoords.x, this.spriteCoords.y, this.width, this.height, this.position.x, this.position.y, this.width, this.height);
 	}
 
 	update(){
@@ -59,12 +62,26 @@ export default class PlayerShip extends Ship {
 			if(keysDown.find(x=>x===UserInputConfig.down)){
 				if(!this.isLeavingGameArea('bottom')) Move(this).down();
 			}
+			if(keysDown.find(x=>x===UserInputConfig.shoot)){
+				// this.shoot()
+			}
 		}
 
 		if(keyPressed !== null && keyPressed===UserInputConfig.shoot){
-			let origin = this.position;
+			let origin = {
+				x: this.getBoundingBox().right,
+				y: this.getBoundingBox().top + this.height/2
+			};
 			this.weapon.fire(origin);
 		}
+
+		let collisionCandidates = this.getCollisionCandidates({type:'powerup'});
+		collisionCandidates.map( c => {
+			if(this.hasCollisions(collisionCandidates)){
+				this.pickUp(c);
+				c.destroy()
+			}
+		})
 
 		this.draw();
 	}

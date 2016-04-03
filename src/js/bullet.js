@@ -1,4 +1,3 @@
-import CharacterDefaults from './character-defaults';
 import Character from './character';
 import Scene from './scene';
 import Vector2 from './vector2';
@@ -7,27 +6,16 @@ export default class Bullet extends Character {
 	constructor(options){
 		super(options);
 		Object.assign(this, options);
-		this.type = 'bullet';
-		this.velocity = 3;
-		this.width = CharacterDefaults.PlayerShip.width;
-		this.height = CharacterDefaults.PlayerShip.height;
+		// console.log(options)
+
+		this.id = Date.now();
 
 		if(this.target) this.vector = this.getVector(this.target);
 	}
 
-	getCollisionCandidates(){
-		return Scene.getCharactersInScene().filter(c=>{
-			switch(this.source){
-				case 'player':
-					return c.type === 'enemy';
-				case 'enemy':
-					return c.type === 'player';
-			}
-		})
-	}
-
 	draw(){
-		this.ctx.drawImage(this.sprite, 10, 10, this.width, this.height, this.position.x, this.position.y, this.width, this.height);
+		console.log('drawing bullet', this)
+		this.ctx.drawImage(this.sprite, this.ammunition.spriteCoords.x, this.ammunition.spriteCoords.y, this.ammunition.width, this.ammunition.height, this.position.x, this.position.y, this.ammunition.width, this.ammunition.height);
 	}
 
 	// Calculate vector to target
@@ -38,17 +26,12 @@ export default class Bullet extends Character {
 		return this.targetVector.subtract(this.startVector).getNormalized();
 	}
 
-	getNextPositionByVector(){
-		let vector = this.getVector(this.target);
-		this.position = {
-			x: this.position.x + vector.x * this.velocity,
-			y: this.position.y + vector.y * this.velocity
-		}
-	}
-
 	update(){
-		let collisionCandidates = this.getCollisionCandidates();
-		switch(this.source){
+		let collisionKeyMap = {
+			type: this.source==='player'?'enemy':'player'
+		};
+		let collisionCandidates = this.getCollisionCandidates(collisionKeyMap);
+		switch(this.source.type){
 			case 'player':
 				this.position = {
 					x: this.position.x + this.velocity,
@@ -57,17 +40,12 @@ export default class Bullet extends Character {
 				break;
 			case 'enemy':
 				if(this.isHoming){
-					let vector = this.getVector(this.target);
-					this.position = {
-						x: vector.x * this.velocity,
-						y: vector.y * this.velocity
-					} 
-				} else {
-					this.position = {
-						x: this.position.x + this.vector.x * this.velocity,
-						y: this.position.y + this.vector.y * this.velocity
-					}
+					this.vector = this.getVector(this.target);
 				} 
+				this.position = {
+					x: this.position.x + this.vector.x * this.velocity,
+					y: this.position.y + this.vector.y * this.velocity
+				}
 				break;
 		}
 

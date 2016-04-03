@@ -1,5 +1,5 @@
 import Character from './character';
-import CharacterDefaults from './character-defaults';
+import CharacterConfig from './character-config';
 import Weapon from './weapon';
 import IntervalManager from './interval-manager';
 import UserInputConfig from './user-input-config';
@@ -14,12 +14,25 @@ export default class Ship extends Character {
 		this.velocity = 1.8;
 	}
 
-	setVelocity(velocity=CharacterDefaults.Ship.velocity){
+	setVelocity(velocity=CharacterConfig.Ship.velocity){
 		this.velocity = velocity;
 	}
 
-	setWeapon(weaponIndex){
-		this.weapon.set(CharacterDefaults.Weapons[weaponIndex]);
+	setWeaponConfig(source, level){
+		let options = Object.assign({source}, CharacterConfig.Weapons[source.type][level]);
+		this.weapon = new Weapon(options);
+	}
+
+	fire(origin){
+		let options = Object.assign(this, {
+			source: this.source,
+			target: this.source === 'enemy' ? Scene.getCharactersInScene()[0] : null,
+			position: {
+				x: origin.x,
+				y: origin.y
+			}
+		});
+		Scene.addCharacter(new Bullet(options));
 	}
 
 	takeDamage(points){

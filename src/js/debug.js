@@ -20,7 +20,7 @@ class Debug {
 			this.advanceLine();
 			this.ctx.fillText(character.type, this.currentPosition.x, this.currentPosition.y);
 			this.advanceLine();
-			this.ctx.fillText("{x:"+character.position.x+",y:"+character.position.y+"}", this.currentPosition.x, this.currentPosition.y);
+			if(character.type!=='turret') this.ctx.fillText("{x:"+character.position.x+",y:"+character.position.y+"}", this.currentPosition.x, this.currentPosition.y);
 		});
 	}
 

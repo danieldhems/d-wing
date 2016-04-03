@@ -12,7 +12,7 @@ gulp.task("copy-html", [], function() {
 });
 
 gulp.task("copy-image", [], function() {
-	gulp.src('src/**/*.gif')
+	gulp.src('src/**/*.{gif,png}')
 	.pipe(gulp.dest('dist/'));
 });
 

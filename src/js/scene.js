@@ -39,8 +39,8 @@ class Scene {
 		return this.charactersInScene;
 	}
 
-	removeCharacter(character){
-		this.charactersInScene.splice(this.charactersInScene.findIndex(x=>x['id']===character['id']),1);
+	removeCharacter(id){
+		this.charactersInScene.splice(this.charactersInScene.findIndex(x=>x['id']===id),1);
 	}
 }
 

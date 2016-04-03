@@ -1,8 +1,10 @@
 import GameStateDefaults from './game-state-defaults';
+import CharacterConfig from './character-config';
 import UserInputConfig from './user-input-config';
 import UserInput from './user-input';
 import PlayerShip from './player-ship';
 import EnemyShip from './enemy-ship';
+import PowerUp from './power-up';
 import Scene from './scene';
 import Debug from './debug';
 
@@ -18,6 +20,7 @@ class GameState {
 		Scene.initialize();
 		Scene.addCharacter(new PlayerShip());
 		Scene.addCharacter(new EnemyShip());
+		Scene.addCharacter(new PowerUp({type:'weapon',level:2,position:{x: 200, y:200}}));
 		this.start();
 	}
 
@@ -41,7 +44,6 @@ class GameState {
 		this._lastUpdate = now;
 
 		let charactersInScene = Scene.getCharactersInScene();
-		// console.log(charactersInScene);
 		charactersInScene.map( character => {
 			character.update(elapsed);
 		});
