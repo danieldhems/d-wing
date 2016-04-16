@@ -6,7 +6,6 @@ export default class Bullet extends Character {
 	constructor(options){
 		super(options);
 		Object.assign(this, options);
-		// console.log(options)
 
 		this.id = Date.now();
 
@@ -14,7 +13,7 @@ export default class Bullet extends Character {
 	}
 
 	draw(){
-		console.log('drawing bullet', this)
+		// console.log('drawing bullet', this)
 		this.ctx.drawImage(this.sprite, this.ammunition.spriteCoords.x, this.ammunition.spriteCoords.y, this.ammunition.width, this.ammunition.height, this.position.x, this.position.y, this.ammunition.width, this.ammunition.height);
 	}
 
@@ -27,30 +26,29 @@ export default class Bullet extends Character {
 	}
 
 	update(){
-		let collisionKeyMap = {
-			type: this.source==='player'?'enemy':'player'
+		const collisionKeyMap = {
+			type: this.target ? 'Player' : 'Enemy'
 		};
-		let collisionCandidates = this.getCollisionCandidates(collisionKeyMap);
-		switch(this.source.type){
-			case 'player':
-				this.position = {
-					x: this.position.x + this.velocity,
-					y: this.position.y
-				}
-				break;
-			case 'enemy':
-				if(this.isHoming){
-					this.vector = this.getVector(this.target);
-				} 
-				this.position = {
-					x: this.position.x + this.vector.x * this.velocity,
-					y: this.position.y + this.vector.y * this.velocity
-				}
-				break;
+		const collisionCandidates = this.getCollisionCandidates(collisionKeyMap);
+		
+		if(this.isHoming){
+			this.vector = this.getVector(this.target);
+		}
+
+		if(this.target){
+			this.position = {
+				x: this.position.x + this.vector.x * this.velocity,
+				y: this.position.y + this.vector.y * this.velocity
+			}
+		} else {
+			this.position = {
+				x: this.position.x + this.velocity,
+				y: this.position.y
+			}
 		}
 
 		if(this.isLeavingGameArea() || this.hasCollisions(collisionCandidates)){
-			this.destroy()
+			this.destroy();
 		} else {
 			this.draw();
 		}
