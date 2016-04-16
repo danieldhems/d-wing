@@ -11,6 +11,7 @@ export default class Character {
 
 		this.sprite = new Image();
 		this.sprite.src = './sprite.png';
+		
 	}
 
 	setVelocity(velocity){
@@ -19,6 +20,12 @@ export default class Character {
 
 	setPosition(position){
 		this.position = {x:position.x,y:position.y};
+	}
+
+	getSpriteCoords(){
+		let index = this.currentSpriteStep;
+		this.currentSpriteStep = this.currentSpriteStep===this.spriteArray.length-1?0:this.currentSpriteStep+1;
+		return this.spriteArray[index];
 	}
 
 	getBoundingBox(){

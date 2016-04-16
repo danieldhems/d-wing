@@ -1,32 +1,51 @@
 import CharacterConfig from './character-config';
-import Character from './character';
+import Ship from './ship';
 import Move from './move';
+import Scene from './scene';
+import Bullet from './bullet';
+import UserInputConfig from './user-input-config';
+import UserInput from './user-input';
 
-export default class Turret extends Character {
+export default class Turret extends Ship {
 	constructor(options){
 		super(options);
-		this.hasDeployed = false;
-		Object.assign(this,options);
+		Object.assign(this, options);
 		this.type = 'turret';
-		console.log(this);
+		this.ship = Scene.getCharactersInScene()[0];
+		this.spriteArray = this.ship.weapon.turrets.spriteCoords;
+		this.currentSpriteStep = 0;
+		this.getSpriteCoords = this.getSpriteCoords.bind(this);
+		this._lastSpriteFrame = Date.now();
+		this.spriteCoords = this.getSpriteCoords();
+		// this.spriteCoords = {x:0,y:78}
 	}
 
 	draw(){
-		console.log('drawing turret')
-			this.ctx.drawImage(this.sprite, this.weapon.turrets.spriteCoords.x, this.weapon.turrets.spriteCoords.y, this.weapon.turrets.width, this.weapon.turrets.height, this.upperTurretPosition.x, this.upperTurretPosition.y, this.weapon.turrets.width, this.weapon.turrets.height);
-			this.ctx.drawImage(this.sprite, this.weapon.turrets.spriteCoords.x, this.weapon.turrets.spriteCoords.y, this.weapon.turrets.width, this.weapon.turrets.height, this.lowerTurretPosition.x, this.lowerTurretPosition.y, this.weapon.turrets.width, this.weapon.turrets.height);
-			this.hasDeployed = true;
+		if(Date.now() - this._lastSpriteFrame > this.ship.weapon.turrets.animRate){
+			this._lastSpriteFrame = Date.now();
+			this.spriteCoords = this.getSpriteCoords();
+		}
+		this.ctx.drawImage(this.sprite, this.spriteCoords.x, this.spriteCoords.y, this.ship.weapon.turrets.width, this.ship.weapon.turrets.height, this.upperTurretPosition.x, this.upperTurretPosition.y, this.ship.weapon.turrets.width, this.ship.weapon.turrets.height);
+		this.ctx.drawImage(this.sprite, this.spriteCoords.x, this.spriteCoords.y, this.ship.weapon.turrets.width, this.ship.weapon.turrets.height, this.lowerTurretPosition.x, this.lowerTurretPosition.y, this.ship.weapon.turrets.width, this.ship.weapon.turrets.height);
 	}
 
 	update(){
+		let keyPressed = keyPressed || UserInput.getKeyPressed();
+
 		this.upperTurretPosition = {
-			x: this.source.position.x,
-			y: this.source.getBoundingBox().top - this.source.turretVerticalPositionOffset - this.weapon.turrets.height
+			x: this.ship.position.x,
+			y: this.getBoundingBox().top - this.ship.turretVerticalPositionOffset - this.ship.weapon.turrets.height
 		};
 		this.lowerTurretPosition = {
-			x: this.source.position.x,
-			y: this.source.getBoundingBox().bottom + this.source.turretVerticalPositionOffset
+			x: this.ship.position.x,
+			y: this.getBoundingBox().bottom + this.ship.turretVerticalPositionOffset
 		};
+
 		this.draw();
+
+		if(this.ship.isFiring){
+			this.shoot(this.upperTurretPosition, this.ship.weaponConfig);
+			this.shoot(this.lowerTurretPosition, this.ship.weaponConfig);
+		}
 	}
 }

@@ -2,8 +2,8 @@ export default {
 	PlayerShip: {
 		width:24,
 		height:21,
-		type: 'player',
-		turretVerticalPositionOffset: 5,
+		type: 'Player',
+		turretVerticalPositionOffset: 15,
 		currentWeaponLevel: 0,
 		spriteCoords: {
 			x: 0,
@@ -15,7 +15,7 @@ export default {
 			width:24,
 			height:21,
 			fireRate: 1500,
-			type: 'enemy',
+			type: 'Enemy',
 			currentWeaponLevel: 0,
 			spriteCoords: {
 				x: 0,
@@ -24,7 +24,7 @@ export default {
 		}
 	],
 	Weapons: {
-		player: [
+		Player: [
 			{
 				type: 'Player Weapons Fire: Level 1',
 				level: 1,
@@ -45,6 +45,7 @@ export default {
 				}
 			},
 			{
+				type: 'Player Weapons Fire: Level 2',
 				level: 2,
 				damage: 2,
 				width: 9,
@@ -61,16 +62,29 @@ export default {
 					}
 				},
 				turrets: {
-					width: 25,
-					height: 19,
-					spriteCoords: {
-						x: 28,
-						y: 57
-					}
+					width: 22,
+					height: 17,
+					animRate: 60,
+					spriteCoords: [{
+						x: 7,
+						y: 59
+					},
+					{
+						x: 7,
+						y: 78
+					},
+					{
+						x: 7,
+						y: 96
+					},
+					{
+						x: 7,
+						y: 114
+					}]
 				}
 			}
 		],
-		enemy: [
+		Enemy: [
 			{
 				type: 'Enemy Weapons Fire: Level 1',
 				damage: 1,
