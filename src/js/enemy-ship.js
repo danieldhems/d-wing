@@ -1,7 +1,5 @@
 import CharacterConfig from './character-config';
 import Ship from './ship';
-import Weapon from './weapon';
-import Utils from './utils';
 import Scene from './scene';
 
 export default class EnemyShip extends Ship {
@@ -17,24 +15,34 @@ export default class EnemyShip extends Ship {
 			y: this.canvas.height/2-this.height/2
 		};
 
-		this.setWeaponConfig = this.setWeaponConfig.bind(this);
-		this.setWeaponConfig(this, this.currentWeaponLevel);
-
-		this.update = this.update.bind(this);
+		this.weaponConfig = this.getWeaponConfig(this.type, 0);
 		this._lastShotFired = Date.now();
 	}
 
-	update(elapsed){
-		this.draw();
+	update(){
+		
+		const collisionCandidates = this.getCollisionCandidatesByType('Bullet');
+		
 		let delta = Date.now() - this._lastShotFired;
 		if(delta > this.fireRate){
-			this.shoot();
+			const position = {
+				x: this.getBoundingBox().left - 10,
+				y: this.getBoundingBox().top + this.height/2
+			};
+			this.shoot(position, this.weaponConfig.ammunition, Scene.getCharactersInScene()[0]);
 			this._lastShotFired = Date.now();
 		}
-	}
 
-	shoot(){
-		this.weapon.fire(this.position);
+		collisionCandidates.map( candidate => {
+			if(this.hasCollision(candidate)){
+				this.takeDamage(candidate.damage);
+				if(this.health===0){
+					Scene.removeCharacter(candidate.id);
+				}
+			}
+		});
+
+		this.draw();
 	}
 
 	draw(){

@@ -20,7 +20,7 @@ class GameState {
 		Scene.initialize();
 		Scene.addCharacter(new PlayerShip());
 		Scene.addCharacter(new EnemyShip());
-		Scene.addCharacter(new PowerUp({type:'weapon',level:2,position:{x: 200, y:200}}));
+		Scene.addCharacter(new PowerUp(Object.assign(CharacterConfig.PowerUps[0], {position:{x: 200, y:300}})));
 		this.start();
 	}
 
@@ -45,7 +45,7 @@ class GameState {
 
 		let charactersInScene = Scene.getCharactersInScene();
 		charactersInScene.map( character => {
-			character.update(elapsed);
+			character.update(delta);
 		});
 
 		Debug.update();

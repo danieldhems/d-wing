@@ -1,11 +1,11 @@
 import CharacterConfig from './character-config';
 import Ship from './ship';
-import Weapon from './weapon';
 import UserInputConfig from './user-input-config';
 import UserInput from './user-input';
 import Move from './move';
 import Scene from './scene';
-import Turrets from './turrets';
+import UpperTurret from './upper-turret';
+import LowerTurret from './lower-turret';
 
 export default class PlayerShip extends Ship {
 	constructor(options){
@@ -14,31 +14,34 @@ export default class PlayerShip extends Ship {
 		Object.assign(this, CharacterConfig.PlayerShip)
 
 		this.id = Date.now();
+		this.isFiring = false;
 
 		this.position = {
 			x: 50,
 			y: this.canvas.height/2-this.height/2,
 		};
 
-		this.setWeaponConfig = this.setWeaponConfig.bind(this);
-		this.setWeaponConfig(this, this.currentWeaponLevel);
+		this.getWeaponConfig = this.getWeaponConfig.bind(this);
+		this.weaponConfig = this.getWeaponConfig(this.type, 0);
 		this.setVelocity(6);
+		this.turretsDeployed = false;
 	}
 
 	upgradeWeapon(level){
-		this.setWeaponConfig(this, level);
-		if(this.weapon.turrets){
-			this.deployTurrets(this.weapon)
+		this.weaponConfig = this.getWeaponConfig(this.type, level);
+		if(this.weaponConfig.turrets && !this.turretsDeployed){
+			this.deployTurrets(this.weaponConfig)
+			this.turretsDeployed = true;
 		}
 	}
 
-	deployTurrets(weapon){
-		Scene.addCharacter(new Turrets({source:this,weapon}));
+	deployTurrets(weaponConfig){
+		Scene.addCharacter(new UpperTurret(weaponConfig));
+		Scene.addCharacter(new LowerTurret(weaponConfig));
 	}
 
 	pickUp(item){
 		this.upgradeWeapon(item.level);
-		console.log(this.weapon)
 	}
 
 	draw(){
@@ -46,6 +49,9 @@ export default class PlayerShip extends Ship {
 	}
 
 	update(){
+
+		this.isFiring = false;
+
 		let keysDown = UserInput.getKeysDown();
 		let keyPressed = keyPressed || UserInput.getKeyPressed();
 
@@ -62,24 +68,28 @@ export default class PlayerShip extends Ship {
 			if(keysDown.find(x=>x===UserInputConfig.down)){
 				if(!this.isLeavingGameArea('bottom')) Move(this).down();
 			}
-			if(keysDown.find(x=>x===UserInputConfig.shoot)){
-				// this.shoot()
-			}
 		}
 
 		if(keyPressed !== null && keyPressed===UserInputConfig.shoot){
-			let origin = {
-				x: this.getBoundingBox().right,
-				y: this.getBoundingBox().top + this.height/2
-			};
-			this.weapon.fire(origin);
+			this.shoot({x: this.getBoundingBox().right + 2, y: this.getBoundingBox().top + this.height/2 - this.weaponConfig.ammunition.height/2}, this.weaponConfig.ammunition);
+			this.isFiring = true;
 		}
 
-		let collisionCandidates = this.getCollisionCandidates({type:'powerup'});
+		const collisionCandidates = this.getCollisionCandidatesByType(['powerup','Bullet']);
 		collisionCandidates.map( c => {
-			if(this.hasCollisions(collisionCandidates)){
-				this.pickUp(c);
-				c.destroy()
+			switch(c.type){
+				case 'powerup':
+					if(this.hasCollision(c)){
+						this.pickUp(c);
+						Scene.removeCharacter(c.id);
+					}						
+					break;
+				case 'Bullet':
+					if(this.hasCollision(c)){
+						this.takeDamage(c);
+						Scene.removeCharacter(c.id);
+					}
+					break;
 			}
 		})
 

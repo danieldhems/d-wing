@@ -14,6 +14,7 @@ export default {
 		{
 			width:24,
 			height:21,
+			health: 1,
 			fireRate: 1500,
 			type: 'Enemy',
 			currentWeaponLevel: 0,
@@ -26,16 +27,14 @@ export default {
 	Weapons: {
 		Player: [
 			{
-				type: 'Player Weapons Fire: Level 1',
 				level: 1,
-				damage: 1,
-				width: 9,
-				height: 7,
-				velocity: 16,
-				fireRate: 8,
-				isProjectile: true,
-				isHoming: false,
 				ammunition: {
+					type: 'Bullet',
+					velocity: 16,
+					fireRate: 8,
+					isProjectile: true,
+					isHoming: false,
+					damage: 1,
 					width: 10,
 					height: 5,
 					spriteCoords: {
@@ -45,17 +44,15 @@ export default {
 				}
 			},
 			{
-				type: 'Player Weapons Fire: Level 2',
 				level: 2,
-				damage: 2,
-				width: 9,
-				height: 7,
-				velocity: 16,
-				isProjectile: true,
-				hasRapidFire: true,
 				ammunition: {
-					width: 1,
-					height: 1,
+					type: 'Bullet',
+					damage: 2,
+					velocity: 16,
+					isProjectile: true,
+					hasRapidFire: true,
+					width: 9,
+					height: 7,
 					spriteCoords: {
 						x: 0,
 						y: 58
@@ -67,19 +64,19 @@ export default {
 					animRate: 50,
 					deploymentRate: 3,
 					spriteCoords: [{
-						x: 7,
+						x: 0,
 						y: 59
 					},
 					{
-						x: 7,
+						x: 0,
 						y: 78
 					},
 					{
-						x: 7,
+						x: 0,
 						y: 96
 					},
 					{
-						x: 7,
+						x: 0,
 						y: 114
 					}]
 				}
@@ -87,13 +84,12 @@ export default {
 		],
 		Enemy: [
 			{
-				type: 'Enemy Weapons Fire: Level 1',
-				damage: 1,
-				width: 9,
-				height: 7,
-				velocity: 4,
-				isProjectile: true,
+				level: 0,
 				ammunition: {
+					type: 'Bullet',
+					damage: 1,
+					velocity: 4,
+					isProjectile: true,
 					width: 7,
 					height: 3,
 					spriteCoords: {

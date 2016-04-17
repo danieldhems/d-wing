@@ -33,7 +33,7 @@ export default class Character {
 			top: this.position.y,
 			right: this.position.x + this.width,
 			bottom: this.position.y + this.height,
-			left: this.position.x,
+			left: this.position.x
 		}
 	}
 
@@ -70,7 +70,7 @@ export default class Character {
 		}
 	}
 
-	hasCollision(target){
+	hasCollision(target, context){
 		/**
 		*	Big thanks to this fiddle for the logic
 		*	http://jsfiddle.net/knam8/
@@ -86,10 +86,14 @@ export default class Character {
 		)
 	}
 
-	getCollisionCandidates(keyMap){
+	getCollisionCandidatesByType(arg){
 		return Scene.getCharactersInScene().filter(c=>{
-			for(let key in keyMap){
-				return keyMap[key] === c[key];
+			if(arg instanceof Array){
+				return arg.map( a => {
+					return c.type === a;
+				})
+			} else {
+				return c.type === arg;
 			}
 		})
 	}
@@ -104,7 +108,4 @@ export default class Character {
 		return collision;
 	}
 
-	destroy(){
-		Scene.removeCharacter(this.id);
-	}
 }

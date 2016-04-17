@@ -5,8 +5,7 @@ import Scene from './scene';
 export default class PowerUp extends Character {
 	constructor(options){
 		super(options);
-		Object.assign(this,options,CharacterConfig.PowerUps[0]);
-		console.log(this)
+		Object.assign(this,options);
 	}
 
 	draw(){
@@ -14,6 +13,6 @@ export default class PowerUp extends Character {
 	}
 
 	update(){
-		this.draw()
+		this.draw();
 	}
 }

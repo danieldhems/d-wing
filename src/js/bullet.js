@@ -13,8 +13,7 @@ export default class Bullet extends Character {
 	}
 
 	draw(){
-		// console.log('drawing bullet', this)
-		this.ctx.drawImage(this.sprite, this.ammunition.spriteCoords.x, this.ammunition.spriteCoords.y, this.ammunition.width, this.ammunition.height, this.position.x, this.position.y, this.ammunition.width, this.ammunition.height);
+		this.ctx.drawImage(this.sprite, this.spriteCoords.x, this.spriteCoords.y, this.width, this.height, this.position.x, this.position.y, this.width, this.height);
 	}
 
 	// Calculate vector to target
@@ -26,10 +25,6 @@ export default class Bullet extends Character {
 	}
 
 	update(){
-		const collisionKeyMap = {
-			type: this.target ? 'Player' : 'Enemy'
-		};
-		const collisionCandidates = this.getCollisionCandidates(collisionKeyMap);
 		
 		if(this.isHoming){
 			this.vector = this.getVector(this.target);
@@ -47,8 +42,8 @@ export default class Bullet extends Character {
 			}
 		}
 
-		if(this.isLeavingGameArea() || this.hasCollisions(collisionCandidates)){
-			this.destroy();
+		if(this.isLeavingGameArea()){
+			Scene.removeCharacter(this.id);
 		} else {
 			this.draw();
 		}
