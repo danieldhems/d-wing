@@ -64,7 +64,8 @@ export default {
 				turrets: {
 					width: 22,
 					height: 17,
-					animRate: 60,
+					animRate: 50,
+					deploymentRate: 3,
 					spriteCoords: [{
 						x: 7,
 						y: 59
